@@ -9,6 +9,11 @@ class Color
 
   def self.white
     @@white  
+  end
+
+  def self.what_color(color)
+    return @@white if Color.white == color 
+    return @@black if Color.black == color 
   end  
   
   def self.opposite(color) 
@@ -23,6 +28,10 @@ class Color
     [Color.black,Color.white]
   end
 
-  
+  def self.to_string(color) 
+    print "black" if Color.what_color(color) == Color.black
+    print "white" if Color.what_color(color) == Color.white 
+
+  end 
 
 end 

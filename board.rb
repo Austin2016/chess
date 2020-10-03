@@ -56,14 +56,16 @@ class Board
   end 
 
   def full_board
+
+  
     self.put_piece( Piece.white_rook, Square.new(File.a,Rank.one) )
     self.put_piece( Piece.white_knight, Square.new(File.b,Rank.one) )
     self.put_piece( Piece.white_bishop, Square.new(File.c,Rank.one) )
     self.put_piece( Piece.white_queen, Square.new(File.d,Rank.one) )
     self.put_piece( Piece.white_king, Square.new(File.e,Rank.one) )
     self.put_piece( Piece.white_bishop, Square.new(File.f,Rank.one) )
-    self.put_piece( Piece.white_knight, Square.new(File.g,Rank.one) )
-    self.put_piece( Piece.white_rook, Square.new(File.h,Rank.one) )
+    #self.put_piece( Piece.white_knight, Square.new(File.g,Rank.one) )
+    #self.put_piece( Piece.white_rook, Square.new(File.h,Rank.one) )
 
     self.put_piece( Piece.black_rook, Square.new(File.a,Rank.eight) )
     self.put_piece( Piece.black_knight, Square.new(File.b,Rank.eight) )
@@ -80,8 +82,8 @@ class Board
     self.put_piece( Piece.white_pawn, Square.new(File.d,Rank.two) )
     self.put_piece( Piece.white_pawn, Square.new(File.e,Rank.two) )
     self.put_piece( Piece.white_pawn, Square.new(File.f,Rank.two) )
-    self.put_piece( Piece.white_pawn, Square.new(File.g,Rank.two) )
-    self.put_piece( Piece.white_pawn, Square.new(File.h,Rank.two) )
+    #self.put_piece( Piece.white_pawn, Square.new(File.g,Rank.two) )
+    #self.put_piece( Piece.white_pawn, Square.new(File.h,Rank.two) )
 
     self.put_piece( Piece.black_pawn, Square.new(File.a,Rank.seven) )
     self.put_piece( Piece.black_pawn, Square.new(File.b,Rank.seven) )
@@ -91,10 +93,24 @@ class Board
     self.put_piece( Piece.black_pawn, Square.new(File.f,Rank.seven) )
     self.put_piece( Piece.black_pawn, Square.new(File.g,Rank.seven) )
     self.put_piece( Piece.black_pawn, Square.new(File.h,Rank.seven) )
+=begin
+    self.put_piece( Piece.black_pawn, Square.new(File.g,Rank.seven) )
+    self.put_piece( Piece.white_pawn, Square.new(File.h,Rank.five) )
+    self.put_piece( Piece.black_pawn, Square.new(File.h,Rank.six) )
 
-    self.put_piece( Piece.black_pawn, Square.new(File.h,Rank.five) )
-    self.put_piece( Piece.white_pawn, Square.new(File.g,Rank.five) )
+    self.put_piece( Piece.black_king, Square.new(File.e,Rank.eight) )
+    self.put_piece( Piece.black_rook, Square.new(File.h,Rank.eight) )
+    self.put_piece( Piece.black_pawn, Square.new(File.h,Rank.seven) )
+
+=end 
+
+  #self.put_piece( Piece.black_pawn, Square.new(File.g,Rank.five) )
+  self.put_piece( Piece.black_pawn, Square.new(File.h,Rank.two) )
   end 
+
+
+
+
   def clone
     board = Board.new
     board.turn = self.turn  
@@ -112,11 +128,23 @@ end
 board = Board.new    
 board.full_board
 Draw.drawer(board)
-
-#board.change_turn
-
-board.en_passant_file = 7
-
+board.en_passant_file = 6
+board.change_turn
 x = MovesGenerator.legal_moves_list(board)
-puts x.length 
+x.select! {|e| e.is_promotion?}
 
+MakeMove.make_move(board,x[0])
+
+Draw.drawer(board)
+
+=begin
+count = 1 
+x.each do |move|
+  board = Board.new
+  board.full_board 
+  MakeMove.make_move(board,move)
+  Draw.drawer(board)
+  puts count
+  count +=1 
+end 
+=end 

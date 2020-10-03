@@ -26,9 +26,9 @@ class MovesGenerator
 
   BLACK_PAWN_ATTACK_DELTAS = [ [-1,-1],[1,-1] ]
 
-  CASTLE_DELTA_LONG =  [-4,0] 
+  CASTLE_DELTA_LONG =  [-2,0] 
 
-  CASTLE_DELTA_SHORT =  [3,0]
+  CASTLE_DELTA_SHORT =  [2,0]
 
 
 
@@ -73,59 +73,60 @@ class MovesGenerator
   end
 
   def self.legal_moves_list(board)
-    moves_list = MovesGenerator.moves_list(board) 
-    puts moves_list.length 
+    moves_list = MovesGenerator.moves_list(board)
+    illegal_list = [] 
   	for move in moves_list	
       board_clone = board.clone
       MakeMove.make_move(board_clone,move)
-      board_clone.change_turn #added for readability, doesn't matter 
+      board_clone.change_turn  
       king_square = MovesGenerator.find_king(board_clone,board.turn)
-      if MovesGenerator.is_square_attacked?(king_square,board_clone,board_clone.turn)
-        moves_list.delete(move)
+      if king_square != nil && MovesGenerator.is_square_attacked?(king_square,board_clone,board_clone.turn)
+        illegal_list << move
       end 
-      if self.is_castle_move?(move) && move.destination.file == File.h && move.moving_piece == Piece.white_king
-      	white_short_path = [Square.new(File.f,Rank.one),Square.new(File.g,Rank.one)]
+     
+      if move.is_castle_move? && move.destination.file == File.g && move.moving_piece == Piece.white_king
+      	white_short_path = [Square.new(File.e,Rank.one),Square.new(File.f,Rank.one)]
         white_short_path.each do |square| 
-      	  if MovesGenerator.is_square_attacked?(square,board,board.turn) 
-      	    moves_list.delete(move)
+      	  if MovesGenerator.is_square_attacked?(square,board,board_clone.turn) 
+      	    illegal_list << move
       	    break
       	  end 
         end 
-      end
-      if self.is_castle_move?(move) && move.destination.file == File.a && move.moving_piece == Piece.white_king
-      	white_long_path = [Square.new(File.d,Rank.one),Square.new(File.c,Rank.one),Square.new(File.b,Rank.one)]    				           				       
+      end	
+      if move.is_castle_move? && move.destination.file == File.c && move.moving_piece == Piece.white_king
+      	white_long_path = [Square.new(File.e,Rank.one),Square.new(File.d,Rank.one)]    				           				       
         white_long_path.each do |square| 
-      	  if MovesGenerator.is_square_attacked?(square,board,board.turn) 
-      	    moves_list.delete(move)
+      	  if MovesGenerator.is_square_attacked?(square,board,board_clone.turn) 
+      	    illegal_list << move
       	    break
       	  end 
         end 
       end
-      if self.is_castle_move?(move) && move.destination.file == File.h && move.moving_piece == Piece.black_king
-      	white_short_path = [Square.new(File.f,Rank.one),Square.new(File.g,Rank.one)]    					                                
-        white_short_path.each do |square| 
-      	  if MovesGenerator.is_square_attacked?(square,board,board.turn) 
-      	    moves_list.delete(move)
+      if move.is_castle_move? && move.destination.file == File.g && move.moving_piece == Piece.black_king
+      	black_short_path = [Square.new(File.e,Rank.eight),Square.new(File.f,Rank.eight)]    					                                
+        black_short_path.each do |square| 
+      	  if MovesGenerator.is_square_attacked?(square,board,board_clone.turn) 
+      	    illegal_list << move
       	    break
       	  end 
         end 
       end
-      if self.is_castle_move?(move) && move.destination.file == File.a && move.moving_piece == Piece.black_king
-      	white_short_path = [Square.new(File.d,Rank.one),Square.new(File.c,Rank.one),Square.new(File.b,Rank.one)]    					                              
-        white_short_path.each do |square| 
-      	  if MovesGenerator.is_square_attacked?(square,board,board.turn) 
-      	    moves_list.delete(move)
+      if move.is_castle_move? && move.destination.file == File.c && move.moving_piece == Piece.black_king
+      	black_long_path = [Square.new(File.e,Rank.eight),Square.new(File.d,Rank.eight)]    					                              
+        black_long_path.each do |square| 
+      	  if MovesGenerator.is_square_attacked?(square,board,board_clone.turn) 
+      	    illegal_list << move
       	    break
       	  end 
         end 
       end 
+
     end 
-    moves_list  
+    moves_list - illegal_list  
   end
 
-  def self.is_castle_move?(move) 
-    (move.moving_piece == Piece.black_king || move.moving_piece == Piece.white_king) && (move.destination.file.int - move.initial.file.int).abs > 1 
-  end    
+  
+
 
   def self.find_king(board,color)
     target_piece = Piece.black_king if color == Color.black
@@ -137,6 +138,7 @@ class MovesGenerator
         return target_square if piece == target_piece 
       end 
     end 
+    return nil 
   end 
       
 
@@ -300,10 +302,10 @@ class MovesGenerator
     end 
     
     int_array += self.king_castle_moves_list(piece,board) 
-     
+    
     int_array.each do |e| 
       destination = Square.new(File.values[e[0]],Rank.values[e[1]])
-      moves_array << Moves.new(initial_square, destination, piece, board.read_square(destination) ) 
+      moves_array << Moves.new(initial_square, destination, piece, board.read_square(destination) )
     end
     moves_array 
   end
@@ -340,8 +342,20 @@ class MovesGenerator
     end 
     int_array_move.select! {|e| board.read_square( Square.new( File.values[e[0]],Rank.values[e[1]]) ) == nil}
     int_array_move.each do |e|
-      destination = Square.new(File.values[e[0]],Rank.values[e[1]]) 
-      moves_array << Moves.new( initial_square,destination,piece,board.read_square(destination) ) 
+      destination = Square.new(File.values[e[0]],Rank.values[e[1]])
+      if destination.rank.int == 7
+        moves_array << Moves.new( initial_square, destination, piece, nil, Piece.white_queen )
+        moves_array << Moves.new( initial_square, destination, piece, nil, Piece.white_rook )
+        moves_array << Moves.new( initial_square, destination, piece, nil, Piece.white_bishop )
+        moves_array << Moves.new( initial_square, destination, piece, nil, Piece.white_knight )
+      elsif destination.rank.int == 0 
+        moves_array << Moves.new( initial_square, destination, piece, nil, Piece.black_queen )
+        moves_array << Moves.new( initial_square, destination, piece, nil, Piece.black_rook )
+        moves_array << Moves.new( initial_square, destination, piece, nil, Piece.black_bishop )
+        moves_array << Moves.new( initial_square, destination, piece, nil, Piece.black_knight )
+      else   
+        moves_array << Moves.new( initial_square, destination, piece ) 
+      end 
     end
     int_array_attack.each do |e|
       destination = Square.new(File.values[e[0]],Rank.values[e[1]])  
@@ -363,6 +377,17 @@ class MovesGenerator
     else 
       return behind_piece 
     end 
+  end 
+
+  def self.square_behind_a_piece(square,piece,board)
+    return nil if piece.color == Color.white && square.rank == Rank.one
+    return nil if piece.color == Color.black && square.rank == Rank.eight 
+    if piece.color == Color.white
+      behind_square = Square.new(square.file, Rank.values[Rank.values.index(square.rank) - 1]) 
+    elsif piece.color == Color.black 
+      behind_square = Square.new(square.file, Rank.values[Rank.values.index(square.rank) + 1]) 
+    end 
+    behind_square
   end 
 
   def self.vector_addition (a,b)
