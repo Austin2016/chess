@@ -69,7 +69,15 @@ class Piece
       return false
     end 
   end 
-
+  
+  def to_s
+    a = ["q","r","b","n"]
+    return a[0] if self.type == PieceType.queen
+    return a[1] if self.type == PieceType.rook
+    return a[2] if self.type == PieceType.bishop
+    return a[3] if self.type == PieceType.knight
+    nil 
+  end 
   
 
 end 

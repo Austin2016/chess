@@ -60,6 +60,10 @@ class File   #a,b,c,d,e,f,g,h
     # can my class variables be modifed because of this method ? 
   end   
 
+  def to_s
+    array = ("a".."h").to_a 
+    array[self.int]
+  end 
   
 
 

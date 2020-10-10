@@ -1,13 +1,4 @@
-require './draw.rb'
-require './piece_type.rb'
-require './piece.rb'
-require './square.rb'
-require './color.rb'
-require './File.rb'
-require './Rank.rb'
-require './Moves.rb'
-require './Moves_generator.rb'
-require './make_move.rb'
+
 
 class Board 
   attr_accessor :turn,:castle_white_long,:castle_white_short, 
@@ -25,8 +16,7 @@ class Board
     @castle_black_long = 1
     @castle_black_short = 1 
 
-   @en_passant_file = nil #can be zero through 7 
-
+    @en_passant_file = nil #can be zero through 7  
   end 
   
 
@@ -58,14 +48,14 @@ class Board
   def full_board
 
   
-    self.put_piece( Piece.white_rook, Square.new(File.a,Rank.one) )
-    self.put_piece( Piece.white_knight, Square.new(File.b,Rank.one) )
-    self.put_piece( Piece.white_bishop, Square.new(File.c,Rank.one) )
-    self.put_piece( Piece.white_queen, Square.new(File.d,Rank.one) )
+    #self.put_piece( Piece.white_rook, Square.new(File.a,Rank.one) )
+    #self.put_piece( Piece.white_knight, Square.new(File.b,Rank.one) )
+    #self.put_piece( Piece.white_bishop, Square.new(File.c,Rank.one) )
+    #self.put_piece( Piece.white_queen, Square.new(File.d,Rank.one) )
     self.put_piece( Piece.white_king, Square.new(File.e,Rank.one) )
     self.put_piece( Piece.white_bishop, Square.new(File.f,Rank.one) )
-    #self.put_piece( Piece.white_knight, Square.new(File.g,Rank.one) )
-    #self.put_piece( Piece.white_rook, Square.new(File.h,Rank.one) )
+    self.put_piece( Piece.white_knight, Square.new(File.g,Rank.one) )
+    self.put_piece( Piece.white_rook, Square.new(File.h,Rank.one) )
 
     self.put_piece( Piece.black_rook, Square.new(File.a,Rank.eight) )
     self.put_piece( Piece.black_knight, Square.new(File.b,Rank.eight) )
@@ -76,16 +66,16 @@ class Board
     self.put_piece( Piece.black_knight, Square.new(File.g,Rank.eight) )
     self.put_piece( Piece.black_rook, Square.new(File.h,Rank.eight) )
     
-    self.put_piece( Piece.white_pawn, Square.new(File.a,Rank.two) )
+    #self.put_piece( Piece.white_pawn, Square.new(File.a,Rank.two) )
     self.put_piece( Piece.white_pawn, Square.new(File.b,Rank.two) )
     self.put_piece( Piece.white_pawn, Square.new(File.c,Rank.two) )
     self.put_piece( Piece.white_pawn, Square.new(File.d,Rank.two) )
     self.put_piece( Piece.white_pawn, Square.new(File.e,Rank.two) )
     self.put_piece( Piece.white_pawn, Square.new(File.f,Rank.two) )
-    #self.put_piece( Piece.white_pawn, Square.new(File.g,Rank.two) )
-    #self.put_piece( Piece.white_pawn, Square.new(File.h,Rank.two) )
+    self.put_piece( Piece.white_pawn, Square.new(File.g,Rank.two) )
+    self.put_piece( Piece.white_pawn, Square.new(File.h,Rank.two) )
 
-    self.put_piece( Piece.black_pawn, Square.new(File.a,Rank.seven) )
+    #self.put_piece( Piece.black_pawn, Square.new(File.a,Rank.seven) )
     self.put_piece( Piece.black_pawn, Square.new(File.b,Rank.seven) )
     self.put_piece( Piece.black_pawn, Square.new(File.c,Rank.seven) )
     self.put_piece( Piece.black_pawn, Square.new(File.d,Rank.seven) )
@@ -93,21 +83,10 @@ class Board
     self.put_piece( Piece.black_pawn, Square.new(File.f,Rank.seven) )
     self.put_piece( Piece.black_pawn, Square.new(File.g,Rank.seven) )
     self.put_piece( Piece.black_pawn, Square.new(File.h,Rank.seven) )
-=begin
-    self.put_piece( Piece.black_pawn, Square.new(File.g,Rank.seven) )
-    self.put_piece( Piece.white_pawn, Square.new(File.h,Rank.five) )
-    self.put_piece( Piece.black_pawn, Square.new(File.h,Rank.six) )
 
-    self.put_piece( Piece.black_king, Square.new(File.e,Rank.eight) )
-    self.put_piece( Piece.black_rook, Square.new(File.h,Rank.eight) )
-    self.put_piece( Piece.black_pawn, Square.new(File.h,Rank.seven) )
-
-=end 
-
-  #self.put_piece( Piece.black_pawn, Square.new(File.g,Rank.five) )
-  self.put_piece( Piece.black_pawn, Square.new(File.h,Rank.two) )
   end 
 
+ 
 
 
 
@@ -125,26 +104,3 @@ end
  
 
 
-board = Board.new    
-board.full_board
-Draw.drawer(board)
-board.en_passant_file = 6
-board.change_turn
-x = MovesGenerator.legal_moves_list(board)
-x.select! {|e| e.is_promotion?}
-
-MakeMove.make_move(board,x[0])
-
-Draw.drawer(board)
-
-=begin
-count = 1 
-x.each do |move|
-  board = Board.new
-  board.full_board 
-  MakeMove.make_move(board,move)
-  Draw.drawer(board)
-  puts count
-  count +=1 
-end 
-=end 

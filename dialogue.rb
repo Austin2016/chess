@@ -1,8 +1,11 @@
+
 class Dialogue 
 
 
-  def self.prompt()
-    #get the turn from the model and prompt player to make move
+  def self.prompt(board)
+    puts "#{Color.to_s(board.turn)}, it's your turn!"
+    user_entry = gets.chomp 
+    user_entry 
   end 
    
 

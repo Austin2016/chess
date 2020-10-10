@@ -29,9 +29,14 @@ class MakeMove
 
     MakeMove.update_castling_status(board,move)
     MakeMove.update_en_passant_status(board,move) 
+    board.change_turn 
   end
 
+  
+
 private 
+
+  
 
   def self.update_castling_status(board,move)
     if move.initial == Square.new(File.a,Rank.one) || move.destination == Square.new(File.a,Rank.one)
