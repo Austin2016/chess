@@ -8,7 +8,18 @@ class Moves
     @destination_piece = destination_piece  
     @promotion = promotion    
   end
-  
+
+  def to_s
+    if self.is_promotion?
+      return self.initial.to_s + self.destination.to_s + self.promotion.to_s  
+    end
+    if self.is_castle_move? 
+      return 'l' if self.destination.file == File.c 
+      return 's' if self.destination.file == File.g
+    end
+    self.initial.to_s + self.destination.to_s  
+  end 
+
   def is_promotion?
     self.promotion != nil 
   end 

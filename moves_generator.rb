@@ -78,7 +78,6 @@ class MovesGenerator
   	for move in moves_list	
       board_clone = board.clone
       MakeMove.make_move(board_clone,move)
-      board_clone.change_turn  
       king_square = MovesGenerator.find_king(board_clone,board.turn)
       if king_square != nil && MovesGenerator.is_square_attacked?(king_square,board_clone,board_clone.turn)
         illegal_list << move
@@ -125,7 +124,10 @@ class MovesGenerator
     moves_list - illegal_list  
   end
 
-  
+  def self.is_in_check?(board,attacked_color)
+    attacking_color = Color.opposite(attacked_color)
+    MovesGenerator.is_square_attacked?( MovesGenerator.find_king(board,attacked_color),board,attacking_color )
+  end   
 
 
   def self.find_king(board,color)

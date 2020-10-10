@@ -58,4 +58,9 @@ class Rank #1,2,3,4,5,6,7,8
     [Rank.one,Rank.two,Rank.three,Rank.four,Rank.five,Rank.six,Rank.seven,Rank.eight]
   end 
 
+  def to_s
+    rank = self.int + 1 
+    rank.to_s 
+  end
+
 end

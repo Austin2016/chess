@@ -28,9 +28,9 @@ class Color
     [Color.black,Color.white]
   end
 
-  def self.to_string(color) 
-    print "black" if Color.what_color(color) == Color.black
-    print "white" if Color.what_color(color) == Color.white 
+  def self.to_s(color) 
+    return "black" if Color.what_color(color) == Color.black
+    return "white" if Color.what_color(color) == Color.white 
 
   end 
 

@@ -26,6 +26,11 @@ class Square
     end 
   end 
 
+  def to_s 
+    self.file.to_s + self.rank.to_s
+
+  end 
+
 
 
 end 
